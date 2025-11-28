@@ -12,7 +12,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Initialize data ingestion (schedule periodic updates)
-dataIngestionService.scheduleUpdates();
+// Skip scheduled tasks in serverless environment (Vercel)
+if (process.env.VERCEL !== '1') {
+    dataIngestionService.scheduleUpdates();
+    logger.info('Data ingestion scheduled updates initialized');
+} else {
+    logger.info('Running in serverless mode - scheduled updates disabled');
+}
 
 
 // Request logging
