@@ -15,21 +15,22 @@ class WebhookController {
             // TODO: Re-enable for production deployment
             logger.info('Webhook received - signature check bypassed for testing');
 
-            // Acknowledge receipt immediately (Twilio expects quick response)
-            res.status(200).send('OK');
-
             // Parse incoming message
             const messageData = whatsappService.parseIncomingMessage(req.body);
 
             if (!messageData) {
                 logger.warn('No valid message data found');
+                res.status(200).send('OK');
                 return;
             }
 
-            // Process message asynchronously
-            this.processMessage(messageData).catch(error => {
-                logger.error('Error processing message:', error);
-            });
+            // Process message and wait for completion
+            // In serverless, we need to complete processing before responding
+            // otherwise the function may terminate before sending WhatsApp replies
+            await this.processMessage(messageData);
+
+            // Send response after processing is complete
+            res.status(200).send('OK');
 
         } catch (error) {
             logger.error('Webhook handler error:', error);
