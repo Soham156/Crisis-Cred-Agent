@@ -1,0 +1,41 @@
+# Local development
+node_modules
+npm-debug.log
+.env
+.env.local
+
+# Logs
+logs
+*.log
+
+# Testing
+test
+tests
+*.test.js
+*.spec.js
+
+# Tunneling scripts (not needed in production)
+scripts/start-with-ngrok.js
+scripts/start-with-localtunnel.js
+test-ngrok.js
+start-tunnel.bat
+
+# Documentation (optional, but saves deployment size)
+docs
+*.md
+!README.md
+
+# Local data
+chroma_data
+*.db
+*.sqlite
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
