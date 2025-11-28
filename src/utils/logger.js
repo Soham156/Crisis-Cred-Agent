@@ -23,22 +23,24 @@ const logger = winston.createLogger({
                 })
             ),
         }),
-
-        // Write all logs with level 'error' and below to error.log
-        new winston.transports.File({
-            filename: 'logs/error.log',
-            level: 'error',
-            maxsize: 5242880, // 5MB
-            maxFiles: 5,
-        }),
-
-        // Write all logs to combined.log
-        new winston.transports.File({
-            filename: 'logs/combined.log',
-            maxsize: 5242880, // 5MB
-            maxFiles: 5,
-        }),
     ],
 });
+
+// Only add file transports in non-serverless environments
+// Vercel and other serverless platforms have read-only filesystems
+if (process.env.VERCEL !== '1' && process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.File({
+        filename: 'logs/error.log',
+        level: 'error',
+        maxsize: 5242880, // 5MB
+        maxFiles: 5,
+    }));
+
+    logger.add(new winston.transports.File({
+        filename: 'logs/combined.log',
+        maxsize: 5242880, // 5MB
+        maxFiles: 5,
+    }));
+}
 
 module.exports = logger;
